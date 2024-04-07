@@ -1,10 +1,10 @@
-import React from 'react'
+import pokeball from '../img/pokeball.svg'
 
 export const Header = () => {
   return (
-    <header>
-        <img src="" alt="" />
-        <h1></h1>
+    <header className='flex items-center'>
+        <img className='w-[80px] h-[80px]' src={pokeball} alt="no logo" />
+        <h1>Pokedex</h1>
     </header>
   )
 }
