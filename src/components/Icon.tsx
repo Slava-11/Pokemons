@@ -1,7 +1,17 @@
-import React from 'react'
+import c from "classnames";
 
-export const Icon = () => {
+type IconProps = {
+  children: JSX.Element,
+  className?: string,
+  onClick?: any
+}
+
+export const Icon = ({children, className, onClick}: IconProps) => {
+  const combinedClassName = c(
+    "text-[30px] absolute",
+    className
+  );
   return (
-    <div>Icon</div>
+    <div className={combinedClassName} onClick={onClick}>{children}</div>
   )
 }

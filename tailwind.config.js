@@ -19,13 +19,7 @@ export default {
       colors: {
         'black': '#000',
         'white': '#fff',
-        'firstBgColour': '#0A0A0A',
-        'secondBgColour':'#F5F5F7',
-        'thirdBgColour': '#574B63',
-        'mainTextColour': '#717171',
-        'secondTextColour': '#F5F5F5',
-        'mainColour': '#490E84',
-        'redColor' : '#8b0000',
+        'mainBg': '#D70A28'
       },
     },
   },

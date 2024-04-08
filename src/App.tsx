@@ -6,7 +6,7 @@ import { Pokemons } from "./sections/Pokemons";
 function App() {
   return (
     <PokemonsProvider>
-      <main>
+      <main className="bg-mainBg">
         <Header />
         <Form/>
         <Pokemons/>
