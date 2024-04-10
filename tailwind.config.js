@@ -19,7 +19,13 @@ export default {
       colors: {
         'black': '#000',
         'white': '#fff',
-        'mainBg': '#D70A28'
+        'transparentWhite': 'rgba(255, 255, 255, 0.9)',
+        'mainBg': '#D70A28',
+        'secondBg': '#FFFDFF',
+        'cardBg': '#ECEBEC',
+        'boxShadow': '#DFDFDF',
+        'fireElement': '#ED742A',
+        'fireElementDim': '#DDA88F'
       },
     },
   },

@@ -3,7 +3,7 @@ import c from "classnames";
 type IconProps = {
   children: JSX.Element,
   className?: string,
-  onClick?: any
+  onClick?: React.MouseEventHandler<HTMLDivElement>
 }
 
 export const Icon = ({children, className, onClick}: IconProps) => {

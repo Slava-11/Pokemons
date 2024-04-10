@@ -4,15 +4,16 @@ import { FiSettings } from "react-icons/fi";
 import { RxCross2 } from "react-icons/rx";
 import { Icon } from "../components/Icon";
 import { SettingsWindow } from "../components/SettingsWindow";
+import { usePokemonContext } from "../context/PokemonContext";
 
 export const Form = () => {
-  const [search, setSearch] = useState(null);
-  const [active, setActive] = useState(true);
+  const { search, setSearch } = usePokemonContext();
+  const [formSettings, setFormSettings] = useState({active: true, type: 'text'});
   const clearRow = () => {
     setSearch("");
   };
   const openSettings = () => {
-    setActive(!active);
+    setFormSettings(!formSettings.active);
   };
   return (
     <form className="px-[20px]">
@@ -20,9 +21,9 @@ export const Form = () => {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          type="text"
+          type={formSettings.type}
           placeholder="Search"
-          className="w-[100%] text-[20px] p-[10px] rounded-[20px] px-[50px]"
+          className="w-[100%] text-[20px] p-[10px] rounded-[20px] px-[50px] border-solid border-boxShadow border-[3px]"
         />
         <Icon className="top-[10px] left-[10px]">
           <BiSearchAlt2 />
@@ -35,12 +36,12 @@ export const Form = () => {
         </Icon>
       </div>
       <Icon
-        className="w-[40px] h-[40px] rounded-[50%] border-solid border-black border-[3px] flex justify-center items-center top-[20px] right-[20px] cursor-pointer"
+        className="w-[40px] h-[40px] rounded-[50%] border-solid border-boxShadow border-[3px] flex justify-center items-center top-[20px] right-[20px] cursor-pointer"
         onClick={openSettings}
       >
         <FiSettings />
       </Icon>
-      <SettingsWindow active={active} setActive={setActive} />
+      <SettingsWindow formSettings={formSettings} setFormSettings={setFormSettings} />
     </form>
   );
 };

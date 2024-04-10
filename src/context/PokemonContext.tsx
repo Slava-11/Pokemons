@@ -1,40 +1,90 @@
-import { createContext, useEffect, useState } from "react";
-import { api } from "../api/api";
+import React, { ReactNode } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
+import { URL } from "../constants";
 
-const URL = "https://pokeapi.co/api/v2/pokemon/?limit=100";
+export const PokemonContext = createContext(null);
 
-export const Pokemons = createContext(null);
+export const usePokemonContext = (): Value => {
+  return useContext(PokemonContext);
+};
 
-export const PokemonsProvider = ({ children }) => {
-  const [data, setData] = useState({ about: [], form: [] });
+type Value = {
+  data: [];
+  search: string;
+  pokemonId: number;
+  pokemonCard: boolean;
+  setData: (data: "") => void;
+};
+
+export const PokemonsProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [data, setData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [pokemonId, setPokemonId] = useState(0);
+  const [pokemonCard, setPokemonCard] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(URL);
-        const {results} = await response.json();
+        const { results } = await response.json();
 
-        const pokemonAbout = results.map(({ url }) => //url = url.url
-          fetch(url).then((response) => response.json())
+        const pokemonAbout = await Promise.all(
+          results.map(({ url }) =>
+            fetch(url).then((response) => response.json())
+          )
         );
 
-        const pokemonDataAbout = await Promise.all(pokemonAbout);
-
-        const pokemonForm =  pokemonDataAbout.map((pokemon) =>
-          fetch(pokemon.forms[0].url).then((response) => response.json()) //Если б не выбрали нулевой елемент(pokemon.forms[0]) нужно было б еще map
+        const updatePokemonAbout = await Promise.all(
+          pokemonAbout.map(async (pokemon) => {
+            const updatedForms = await Promise.all(
+              pokemon.forms.map(async (form) => {
+                const formResponce = await fetch(form.url);
+                return formResponce.json();
+              })
+            );
+            const updatedSpecies = await fetch(pokemon.species.url);
+            const data = await updatedSpecies.json();
+            return { ...pokemon, forms: updatedForms, species: data };
+          })
         );
-        const pokemonDataForm = await Promise.all(pokemonForm);
-
-        setData({ about: pokemonDataAbout, form: pokemonDataForm });
+        const updatedPokemons = await Promise.all(
+          updatePokemonAbout.map((pokemon) => {
+            const {
+              cries,
+              game_indices,
+              held_items,
+              location_area_encounters,
+              moves,
+              past_abilities,
+              past_types,
+              sprites,
+              ...updatedPokemon
+            } = pokemon;
+            return updatedPokemon;
+          })
+        );
+        setData(updatedPokemons);
       } catch (error) {
-        console.log("eeeeeeeeeeeeeeeeeee");
+        console.log(error);
       }
     };
     fetchData();
   }, []);
-  console.log(data);
+  const value: Value = {
+    data,
+    setData,
+    search,
+    setSearch,
+    pokemonId,
+    setPokemonId,
+    pokemonCard,
+    setPokemonCard,
+  };
   return (
-    <Pokemons.Provider value={{ data, setData }}>{children}</Pokemons.Provider>
+    <PokemonContext.Provider value={value}>{children}</PokemonContext.Provider>
   );
 };
-///////////////////////////////////////////////ПОВТОРИ САМ
